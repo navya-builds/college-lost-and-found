@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Report Item - College Lost & Found</title>
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+
+    <header>
+
+        <nav>
+
+            <h1>College Lost & Found</h1>
+
+            <a href="index.html">Home</a>
+
+            <a href="report.html">Report Item</a>
+
+        </nav>
+
+    </header>
+
+
+    <!-- ================= MAIN CONTENT ================= -->
+
+    <main>
+
+        <section>
+
+            <h2>Report a Lost or Found Item</h2>
+
+            <p>
+                Use this form to report an item that you have lost
+                or an item that you have found on campus.
+            </p>
+
+        </section>
+
+
+        <!-- ================= REPORT FORM ================= -->
+
+        <section>
+
+            <form>
+
+                <!-- Item Type -->
+
+                <div>
+
+                    <label for="item-type">
+                        What do you want to report?
+                    </label>
+
+                    <select id="item-type" name="item-type">
+
+                        <option value="">Select an option</option>
+
+                        <option value="lost">I lost an item</option>
+
+                        <option value="found">I found an item</option>
+
+                    </select>
+
+                </div>
+
+
+                <br>
+
+
+                <!-- Item Name -->
+
+                <div>
+
+                    <label for="item-name">
+                        Item Name:
+                    </label>
+
+                    <input
+                        type="text"
+                        id="item-name"
+                        name="item-name"
+                        placeholder="e.g. Casio Calculator"
+                    >
+
+                </div>
+
+
+                <br>
+
+
+                <!-- Category -->
+
+                <div>
+
+                    <label for="category">
+                        Category:
+                    </label>
+
+                    <select id="category" name="category">
+
+                        <option value="">Select a category</option>
+
+                        <option value="electronics">
+                            Electronics
+                        </option>
+
+                        <option value="bags">
+                            Bags
+                        </option>
+
+                        <option value="documents">
+                            Documents / ID Cards
+                        </option>
+
+                        <option value="stationery">
+                            Stationery
+                        </option>
+
+                        <option value="clothing">
+                            Clothing
+                        </option>
+
+                        <option value="accessories">
+                            Accessories
+                        </option>
+
+                        <option value="other">
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <br>
+
+
+                <!-- Description -->
+
+                <div>
+
+                    <label for="description">
+                        Description:
+                    </label>
+
+                    <br>
+
+                    <textarea
+                        id="description"
+                        name="description"
+                        rows="6"
+                        cols="40"
+                        placeholder="Describe the item in detail..."
+                    ></textarea>
+
+                </div>
+
+
+                <br>
+
+
+                <!-- Location -->
+
+                <div>
+
+                    <label for="location">
+                        Location:
+                    </label>
+
+                    <input
+                        type="text"
+                        id="location"
+                        name="location"
+                        placeholder="e.g. R BLOCK, Library"
+                    >
+
+                </div>
+
+
+                <br>
+
+
+                <!-- Date -->
+
+                <div>
+
+                    <label for="date">
+                        Date:
+                    </label>
+
+                    <input
+                        type="date"
+                        id="date"
+                        name="date"
+                    >
+
+                </div>
+
+
+                <br>
+
+
+                <!-- Contact Information -->
+
+                <div>
+
+                    <label for="contact">
+                        Contact Information:
+                    </label>
+
+                    <input
+                        type="text"
+                        id="contact"
+                        name="contact"
+                        placeholder="Email or phone number"
+                    >
+
+                </div>
+
+
+                <br>
+
+
+                <!-- Submit Button -->
+
+                <div>
+
+                    <button type="submit">
+                        Submit Report
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </main>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        <p>
+            &copy; 2026 College Lost & Found
+        </p>
+
+    </footer>
+
+</body>
+
+</html>
