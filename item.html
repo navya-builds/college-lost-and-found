@@ -1,126 +1,106 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Item Details - College Lost & Found</title>
+    <title>College Lost & Found</title>
+
     <link rel="stylesheet" href="style.css">
-    
 </head>
+
 <body>
 
-    <!-- ================= HEADER ================= -->
+    <!-- Navigation -->
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="report.html">Report Item</a>
+    </nav>
 
-    <header>
+    <!-- Main Content -->
+    <main class="container">
 
-        <nav>
-
+        <!-- Hero Section -->
+        <section class="hero">
             <h1>College Lost & Found</h1>
 
-            <a href="index.html">Home</a>
-
-            <a href="report.html">Report Item</a>
-
-        </nav>
-
-    </header>
-
-
-    <!-- ================= MAIN CONTENT ================= -->
-
-    <main>
-
-        <section>
-
-            <h2>Item Details</h2>
-
             <p>
-                Here are the details of the reported item.
+                Lost something on campus or found an item?
+                Help reunite lost belongings with their owners.
             </p>
+
+            <a href="report.html" class="button">
+                Report an Item
+            </a>
+        </section>
+
+        <!-- Search Section -->
+        <section class="search-section">
+
+            <h2>Find an Item</h2>
+
+            <form id="search-form">
+
+                <input
+                    type="text"
+                    id="search-input"
+                    placeholder="Search by item name, category or location"
+                >
+
+                <button type="submit" id="search-button">
+                    Search
+                </button>
+
+            </form>
 
         </section>
 
+        <!-- Filters -->
+        <section class="filter-section">
 
-        <!-- ================= ITEM INFORMATION ================= -->
+            <h2>Browse Items</h2>
 
-        <section>
+            <div class="filter-buttons">
 
-            <h3>Casio Scientific Calculator</h3>
+                <button type="button" id="all-button">
+                    All Items
+                </button>
 
-            <p>
-                <strong>Status:</strong> Lost
-            </p>
+                <button type="button" id="lost-button">
+                    Lost Items
+                </button>
 
-            <p>
-                <strong>Category:</strong> Electronics
-            </p>
+                <button type="button" id="found-button">
+                    Found Items
+                </button>
 
-            <p>
-                <strong>Location:</strong> R BLOCK
-            </p>
-
-            <p>
-                <strong>Date Lost:</strong> September 18, 2026
-            </p>
-
-            <p>
-                <strong>Description:</strong>
-            </p>
-
-            <p>
-                A black Casio scientific calculator was lost near
-                the CSE Block classroom. It has a small scratch
-                near the display and a name sticker on the back.
-            </p>
+            </div>
 
         </section>
 
+        <!-- Items List -->
+        <section class="items-section">
 
-        <!-- ================= REPORTER INFORMATION ================= -->
+            <h2>Recent Items</h2>
 
-        <section>
+            <div id="items-container">
 
-            <h3>Reporter Information</h3>
+                <p>Loading items...</p>
 
-            <p>
-                The person who reported this item can be contacted
-                if you have information about the calculator.
-            </p>
-
-            <button type="button">
-                Contact Reporter
-            </button>
-
-        </section>
-
-
-        <!-- ================= BACK BUTTON ================= -->
-
-        <section>
-
-            <p>
-                <a href="index.html">
-                    &larr; Back to All Items
-                </a>
-            </p>
+            </div>
 
         </section>
 
     </main>
 
-
-    <!-- ================= FOOTER ================= -->
-
+    <!-- Footer -->
     <footer>
-
-        <p>
-            &copy; 2026 College Lost & Found
-        </p>
+        <p>© 2026 College Lost & Found</p>
     </footer>
 
-</body>
+    <!-- JavaScript -->
+    <script src="script.js"></script>
 
+</body>
 </html>

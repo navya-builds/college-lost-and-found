@@ -1,3 +1,4 @@
+
 * {
     box-sizing: border-box;
 }
@@ -5,21 +6,19 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background-color: #e8f8aeee;
-    color: #1b70a1;
+    background-color: #f3f6fb;
+    color: #334155;
     line-height: 1.6;
 }
 
-
 header {
-    background-color: #1f2937;
+    background-color: #1e3a8a;
     padding: 20px 40px;
 }
 
 nav {
     max-width: 1100px;
     margin: 0 auto;
-
     display: flex;
     align-items: center;
     gap: 25px;
@@ -28,7 +27,6 @@ nav {
 nav h1 {
     margin: 0;
     margin-right: auto;
-
     color: white;
     font-size: 24px;
 }
@@ -37,14 +35,12 @@ nav a {
     color: white;
     text-decoration: none;
     font-size: 16px;
+    font-weight: bold;
 }
 
 nav a:hover {
     text-decoration: underline;
 }
-
-
-
 
 main {
     max-width: 1100px;
@@ -54,102 +50,148 @@ main {
 
 section {
     background-color: white;
-
     padding: 25px;
     margin-bottom: 25px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(15, 23, 42, 0.06);
+}
 
-    border-radius: 10px;
-
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+h1,
+h2 {
+    color: #1e293b;
 }
 
 h2 {
     margin-top: 0;
-    color: #1f2937;
 }
 
 h3 {
-    color: #374151;
+    color: #1e3a8a;
+    margin-top: 0;
+    font-size: 21px;
 }
 
+.hero {
+    text-align: center;
+    padding: 40px 25px;
+    background: linear-gradient(135deg, #dbeafe, #eff6ff);
+}
 
+.hero h1 {
+    margin-top: 0;
+    font-size: 34px;
+}
+
+.hero p {
+    max-width: 650px;
+    margin: 0 auto 20px;
+}
+
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 7px;
+    background-color: #2563eb;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.button:hover {
+    background-color: #1d4ed8;
+}
 
 input,
 select,
 textarea {
     width: 100%;
-
-    padding: 10px;
-
+    padding: 12px;
     margin-top: 6px;
-
-    border: 1px solid #ccc;
-    border-radius: 6px;
-
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
     font-size: 15px;
+    font-family: inherit;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: 2px solid #93c5fd;
+    border-color: #2563eb;
 }
 
 textarea {
     resize: vertical;
 }
 
-
-
-
 button {
-    padding: 10px 18px;
-
+    padding: 11px 18px;
     border: none;
-    border-radius: 6px;
-
+    border-radius: 7px;
     background-color: #2563eb;
     color: white;
-
     font-size: 15px;
-
+    font-weight: bold;
     cursor: pointer;
+    transition: background-color 0.2s ease;
 }
 
 button:hover {
     background-color: #1d4ed8;
 }
 
-
-
-article {
-    border: 1px solid #ddd;
-
-    padding: 20px;
-
-    margin-bottom: 20px;
-
-    border-radius: 8px;
-
-    background-color: #fafafa;
+.filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
-article:last-child {
-    margin-bottom: 0;
+#items-container {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+article {
+    border: 1px solid #e2e8f0;
+    padding: 22px;
+    border-radius: 12px;
+    background-color: #ffffff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+article:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
 }
 
 article h3 {
-    margin-top: 0;
+    margin-bottom: 12px;
 }
 
-article a {
-    color: #2563eb;
+article p {
+    margin: 8px 0;
+    overflow-wrap: anywhere;
+}
 
-    text-decoration: none;
-
+.status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
     font-weight: bold;
+    text-transform: uppercase;
 }
 
-article a:hover {
-    text-decoration: underline;
+.status-lost {
+    background-color: #fee2e2;
+    color: #b91c1c;
 }
 
-
-
+.status-found {
+    background-color: #dcfce7;
+    color: #166534;
+}
 
 form {
     max-width: 700px;
@@ -163,18 +205,11 @@ label {
     font-weight: bold;
 }
 
-
-
-
 footer {
     text-align: center;
-
-    background-color: #1f2937;
-
+    background-color: #1e293b;
     color: white;
-
     padding: 20px;
-
     margin-top: 40px;
 }
 
@@ -182,10 +217,7 @@ footer p {
     margin: 0;
 }
 
-
-
 @media (max-width: 700px) {
-
     header {
         padding: 20px;
     }
@@ -207,4 +239,11 @@ footer p {
         padding: 20px;
     }
 
+    #items-container {
+        grid-template-columns: 1fr;
+    }
+
+    .hero h1 {
+        font-size: 28px;
+    }
 }
