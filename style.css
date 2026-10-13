@@ -193,6 +193,21 @@ article p {
     color: #166534;
 }
 
+.status-recovered {
+    background-color: #dbeafe;
+    color: #1d4ed8;
+}
+
+.recover-button {
+    margin-top: 12px;
+    background-color: #15803d;
+}
+
+.recover-button:hover {
+    background-color: #166534;
+}
+
+
 form {
     max-width: 700px;
 }

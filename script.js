@@ -57,12 +57,12 @@ function displayItems(itemsToDisplay) {
             <article>
                 <h3>${item.name}</h3>
 
-               <p>
-           <strong>Status:</strong>
-            <span class="status-badge status-${item.status}">
-           ${item.status}
-            </span>
-               </p>
+                <p>
+                    <strong>Status:</strong>
+                    <span class="status-badge status-${item.status}">
+                        ${item.status}
+                    </span>
+                </p>
 
                 <p>
                     <strong>Category:</strong>
@@ -80,6 +80,17 @@ function displayItems(itemsToDisplay) {
                 </p>
 
                 <p>${item.description}</p>
+
+                ${
+                    item.status !== "recovered"
+                    ? `<button
+                            type="button"
+                            class="recover-button"
+                            data-id="${item.id}">
+                            Mark as Recovered
+                       </button>`
+                    : `<p><strong>Item recovered successfully.</strong></p>`
+                }
             </article>
         `;
     });
@@ -175,6 +186,58 @@ if (foundButton) {
 }
 
 
+// Recovered items filter
+const recoveredButton =
+    document.querySelector("#recovered-button");
+
+if (recoveredButton) {
+    recoveredButton.addEventListener("click", function() {
+        selectedStatus = "recovered";
+        filterItems();
+    });
+}
+
+
+// Mark item as recovered
+const itemsContainer =
+    document.querySelector("#items-container");
+
+if (itemsContainer) {
+    itemsContainer.addEventListener("click", function(event) {
+        const button = event.target.closest(".recover-button");
+
+        if (!button) {
+            return;
+        }
+
+        const itemId = Number(button.dataset.id);
+
+        const selectedItem = items.find(function(item) {
+            return item.id === itemId;
+        });
+
+        if (!selectedItem) {
+            alert("Item not found.");
+            return;
+        }
+
+        const confirmed = confirm(
+            "Are you sure you want to mark this item as recovered?"
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        selectedItem.status = "recovered";
+
+        saveItems();
+
+        filterItems();
+    });
+}
+
+
 // Report item form
 const reportForm =
     document.querySelector("#report-form");
@@ -204,8 +267,6 @@ if (reportForm) {
         const contact =
             document.querySelector("#contact").value.trim();
 
-
-        // Check required fields
         if (
             name === "" ||
             description === "" ||
@@ -217,8 +278,6 @@ if (reportForm) {
             return;
         }
 
-
-        // Validate email or phone number
         const emailPattern =
             /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -235,8 +294,6 @@ if (reportForm) {
             return;
         }
 
-
-        // Create new item
         const newItem = {
             id: Date.now(),
             name: name,
@@ -248,8 +305,6 @@ if (reportForm) {
             contact: contact
         };
 
-
-        // Save item
         items.push(newItem);
 
         saveItems();

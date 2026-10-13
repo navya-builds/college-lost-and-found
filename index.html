@@ -1,6 +1,6 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,94 +13,83 @@
 <body>
 
     <header>
-
         <nav>
-
             <h1>College Lost & Found</h1>
 
             <a href="index.html">Home</a>
             <a href="report.html">Report Item</a>
-
         </nav>
-
     </header>
-
 
     <main>
 
-        <section>
-
-            <h2>Find What You Lost</h2>
+        <section class="hero">
+            <h1>Find What's Lost. Return What's Found.</h1>
 
             <p>
-                Lost something on campus? Or found something that belongs
-                to someone else? Use our College Lost & Found system to
-                report and find items easily.
+                Lost something on campus or found an item?
+                Help reunite lost belongings with their owners.
             </p>
 
+            <a href="report.html" class="button">
+                Report an Item
+            </a>
         </section>
 
-
-        <section>
-
-            <h2>Search Items</h2>
+        <section class="search-section">
+            <h2>Find an Item</h2>
 
             <form id="search-form">
-
                 <input
                     type="text"
                     id="search-input"
-                    placeholder="Search for an item"
+                    placeholder="Search by item name, category or location"
+                    aria-label="Search items"
                 >
 
                 <button type="submit" id="search-button">
                     Search
                 </button>
-
             </form>
-
         </section>
 
-
-        <section>
-
+        <section class="filter-section">
             <h2>Browse Items</h2>
 
-            <button type="button" id="all-button">
-                All
-            </button>
+            <div class="filter-buttons">
+                <button type="button" id="all-button">
+                    All Items
+                </button>
 
-            <button type="button" id="lost-button">
-                Lost
-            </button>
+                <button type="button" id="lost-button">
+                    Lost Items
+                </button>
 
-            <button type="button" id="found-button">
-                Found
-            </button>
+                <button type="button" id="found-button">
+                    Found Items
+                </button>
 
+                <button type="button" id="recovered-button">
+                    Recovered Items
+                </button>
+            </div>
         </section>
 
-
-        <section>
-
+        <section class="items-section">
             <h2>Recent Items</h2>
 
-            <div id="items-container"></div>
-
+            <div id="items-container">
+                <p>Loading items...</p>
+            </div>
         </section>
 
     </main>
 
-
     <footer>
-
-        <p>&copy; 2026 College Lost & Found</p>
-
+        <p>© 2026 College Lost & Found</p>
     </footer>
-
 
     <script src="script.js"></script>
 
 </body>
-
 </html>
