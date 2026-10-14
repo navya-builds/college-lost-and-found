@@ -1,324 +1,266 @@
 
-const defaultItems = [
-    {
-        id: 1,
-        name: "Casio Calculator",
-        status: "lost",
-        category: "electronics",
-        description: "Black Casio scientific calculator with a small scratch near the display.",
-        location: "CSE Block",
-        date: "2026-09-18",
-        contact: "student@example.com"
-    },
-    {
-        id: 2,
-        name: "Black Backpack",
-        status: "found",
-        category: "bags",
-        description: "Black backpack found near the college library.",
-        location: "College Library",
-        date: "2026-09-19",
-        contact: "student@example.com"
-    }
-];
-
-let items =
-    JSON.parse(localStorage.getItem("lostFoundItems")) ||
-    defaultItems;
-
+let items = [];
 let selectedStatus = "all";
 
+// Load items from the backend
+async function loadItems() {
+    try {
+        const response = await fetch("/api/items");
 
-function saveItems() {
-    localStorage.setItem(
-        "lostFoundItems",
-        JSON.stringify(items)
-    );
+        if (!response.ok) {
+            throw new Error("Could not load items.");
+        }
+
+        items = await response.json();
+        filterItems();
+    } catch (error) {
+        console.error("Error loading items:", error);
+
+        const container = document.querySelector("#items-container");
+
+        if (container) {
+            container.innerHTML =
+                "<p>Unable to load items. Please check that the server is running.</p>";
+        }
+    }
 }
 
+// Safely display user-provided text in HTML
+function escapeHtml(value) {
+    return String(value ?? "").replace(/[&<>"']/g, character => {
+        const entities = {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        };
 
+        return entities[character];
+    });
+}
+
+// Display items as cards
 function displayItems(itemsToDisplay) {
-    const container =
-        document.querySelector("#items-container");
+    const container = document.querySelector("#items-container");
 
-    if (!container) {
-        return;
-    }
+    if (!container) return;
 
     if (itemsToDisplay.length === 0) {
         container.innerHTML = "<p>No items found.</p>";
         return;
     }
 
-    let html = "";
+    container.innerHTML = itemsToDisplay.map(item => `
+        <div class="item-card">
+            <h3>${escapeHtml(item.name)}</h3>
 
-    itemsToDisplay.forEach(function(item) {
-        html += `
-            <article>
-                <h3>${item.name}</h3>
+            <p>
+                <strong>Status:</strong>
+                <span class="item-status">
+                    ${escapeHtml(item.status)}
+                </span>
+            </p>
 
-                <p>
-                    <strong>Status:</strong>
-                    <span class="status-badge status-${item.status}">
-                        ${item.status}
-                    </span>
-                </p>
+            <p><strong>Category:</strong> ${escapeHtml(item.category)}</p>
 
-                <p>
-                    <strong>Category:</strong>
-                    ${item.category}
-                </p>
+            <p><strong>Description:</strong> ${escapeHtml(item.description || "No description")}</p>
 
-                <p>
-                    <strong>Location:</strong>
-                    ${item.location}
-                </p>
+            <p><strong>Location:</strong> ${escapeHtml(item.location)}</p>
 
-                <p>
-                    <strong>Date:</strong>
-                    ${item.date}
-                </p>
+            <p><strong>Date:</strong> ${escapeHtml(item.date)}</p>
 
-                <p>${item.description}</p>
+            <p><strong>Contact:</strong> ${escapeHtml(item.contact)}</p>
 
-                ${
-                    item.status !== "recovered"
-                    ? `<button
-                            type="button"
-                            class="recover-button"
-                            data-id="${item.id}">
-                            Mark as Recovered
+            ${
+                item.status !== "recovered"
+                    ? `<button class="recover-button" data-id="${Number(item.id)}">
+                        Mark as Recovered
                        </button>`
-                    : `<p><strong>Item recovered successfully.</strong></p>`
-                }
-            </article>
-        `;
-    });
-
-    container.innerHTML = html;
+                    : "<p><strong>Item Recovered</strong></p>"
+            }
+        </div>
+    `).join("");
 }
 
-
+// Search and filter items
 function filterItems() {
-    const searchInput =
-        document.querySelector("#search-input");
+    const searchInput = document.querySelector("#search-input");
+    const searchTerm = searchInput
+        ? searchInput.value.trim().toLowerCase()
+        : "";
 
-    let searchText = "";
+    const filteredItems = items.filter(item => {
+        const matchesSearch =
+            String(item.name || "").toLowerCase().includes(searchTerm) ||
+            String(item.category || "").toLowerCase().includes(searchTerm) ||
+            String(item.location || "").toLowerCase().includes(searchTerm);
 
-    if (searchInput) {
-        searchText =
-            searchInput.value.toLowerCase().trim();
-    }
-
-    const filteredItems = items.filter(function(item) {
         const matchesStatus =
             selectedStatus === "all" ||
             item.status === selectedStatus;
 
-        const matchesSearch =
-            item.name.toLowerCase().includes(searchText) ||
-            item.category.toLowerCase().includes(searchText) ||
-            item.location.toLowerCase().includes(searchText);
-
-        return matchesStatus && matchesSearch;
+        return matchesSearch && matchesStatus;
     });
 
     displayItems(filteredItems);
 }
 
-
 // Search form
-const searchForm =
-    document.querySelector("#search-form");
+const searchForm = document.querySelector("#search-form");
 
 if (searchForm) {
-    searchForm.addEventListener("submit", function(event) {
+    searchForm.addEventListener("submit", event => {
         event.preventDefault();
         filterItems();
     });
 }
 
-
-// Live search
-const searchInput =
-    document.querySelector("#search-input");
+// Update results while typing
+const searchInput = document.querySelector("#search-input");
 
 if (searchInput) {
-    searchInput.addEventListener("input", function() {
-        filterItems();
-    });
+    searchInput.addEventListener("input", filterItems);
 }
 
+// Status filter buttons
+function setupFilterButton(buttonId, status) {
+    const button = document.querySelector(buttonId);
 
-// All items filter
-const allButton =
-    document.querySelector("#all-button");
-
-if (allButton) {
-    allButton.addEventListener("click", function() {
-        selectedStatus = "all";
-        filterItems();
-    });
+    if (button) {
+        button.addEventListener("click", () => {
+            selectedStatus = status;
+            filterItems();
+        });
+    }
 }
 
+setupFilterButton("#all-button", "all");
+setupFilterButton("#lost-button", "lost");
+setupFilterButton("#found-button", "found");
+setupFilterButton("#recovered-button", "recovered");
 
-// Lost items filter
-const lostButton =
-    document.querySelector("#lost-button");
-
-if (lostButton) {
-    lostButton.addEventListener("click", function() {
-        selectedStatus = "lost";
-        filterItems();
-    });
-}
-
-
-// Found items filter
-const foundButton =
-    document.querySelector("#found-button");
-
-if (foundButton) {
-    foundButton.addEventListener("click", function() {
-        selectedStatus = "found";
-        filterItems();
-    });
-}
-
-
-// Recovered items filter
-const recoveredButton =
-    document.querySelector("#recovered-button");
-
-if (recoveredButton) {
-    recoveredButton.addEventListener("click", function() {
-        selectedStatus = "recovered";
-        filterItems();
-    });
-}
-
-
-// Mark item as recovered
-const itemsContainer =
-    document.querySelector("#items-container");
+// Mark an item as recovered using the backend
+const itemsContainer = document.querySelector("#items-container");
 
 if (itemsContainer) {
-    itemsContainer.addEventListener("click", function(event) {
+    itemsContainer.addEventListener("click", async event => {
         const button = event.target.closest(".recover-button");
 
-        if (!button) {
-            return;
-        }
+        if (!button) return;
 
-        const itemId = Number(button.dataset.id);
+        const itemId = button.dataset.id;
 
-        const selectedItem = items.find(function(item) {
-            return item.id === itemId;
-        });
-
-        if (!selectedItem) {
-            alert("Item not found.");
-            return;
-        }
+        if (!itemId) return;
 
         const confirmed = confirm(
             "Are you sure you want to mark this item as recovered?"
         );
 
-        if (!confirmed) {
-            return;
+        if (!confirmed) return;
+
+        button.disabled = true;
+
+        try {
+            const response = await fetch(`/api/items/${itemId}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    status: "recovered"
+                })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.message || "Could not update item.");
+            }
+
+            alert("Item marked as recovered successfully!");
+
+            await loadItems();
+        } catch (error) {
+            console.error("Error updating item:", error);
+            alert(error.message || "Something went wrong.");
+
+            button.disabled = false;
         }
-
-        selectedItem.status = "recovered";
-
-        saveItems();
-
-        filterItems();
     });
 }
 
-
-// Report item form
-const reportForm =
-    document.querySelector("#report-form");
+// Report a new item using the backend
+const reportForm = document.querySelector("#report-form");
 
 if (reportForm) {
-    reportForm.addEventListener("submit", function(event) {
+    reportForm.addEventListener("submit", async event => {
         event.preventDefault();
 
-        const status =
-            document.querySelector("#item-type").value;
+        const name = document.querySelector("#item-name").value.trim();
+        const status = document.querySelector("#item-type").value;
+        const category = document.querySelector("#category").value;
+        const description = document.querySelector("#description").value.trim();
+        const location = document.querySelector("#location").value.trim();
+        const date = document.querySelector("#date").value;
+        const contact = document.querySelector("#contact").value.trim();
 
-        const name =
-            document.querySelector("#item-name").value.trim();
-
-        const category =
-            document.querySelector("#category").value;
-
-        const description =
-            document.querySelector("#description").value.trim();
-
-        const location =
-            document.querySelector("#location").value.trim();
-
-        const date =
-            document.querySelector("#date").value;
-
-        const contact =
-            document.querySelector("#contact").value.trim();
-
-        if (
-            name === "" ||
-            description === "" ||
-            location === "" ||
-            date === "" ||
-            contact === ""
-        ) {
+        if (!name || !status || !category || !location || !date || !contact) {
             alert("Please fill in all required fields.");
             return;
         }
 
-        const emailPattern =
-            /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const validContact =
+            /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact) ||
+            /^\+?[0-9\s()-]{10,15}$/.test(contact);
 
-        const phonePattern =
-            /^\+?[0-9\s()-]{10,20}$/;
-
-        if (
-            !emailPattern.test(contact) &&
-            !phonePattern.test(contact)
-        ) {
-            alert(
-                "Please enter a valid email address or phone number."
-            );
+        if (!validContact) {
+            alert("Please enter a valid email address or phone number.");
             return;
         }
 
-        const newItem = {
-            id: Date.now(),
-            name: name,
-            status: status,
-            category: category,
-            description: description,
-            location: location,
-            date: date,
-            contact: contact
-        };
+        const submitButton = reportForm.querySelector(
+            'button[type="submit"], input[type="submit"]'
+        );
 
-        items.push(newItem);
+        if (submitButton) submitButton.disabled = true;
 
-        saveItems();
+        try {
+            const response = await fetch("/api/items", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name,
+                    status,
+                    category,
+                    description,
+                    location,
+                    date,
+                    contact
+                })
+            });
 
-        alert("Item reported successfully!");
+            const result = await response.json();
 
-        reportForm.reset();
+            if (!response.ok) {
+                throw new Error(result.message || "Could not report item.");
+            }
 
-        window.location.href = "index.html";
+            alert("Item reported successfully!");
+
+            window.location.href = "index.html";
+        } catch (error) {
+            console.error("Error reporting item:", error);
+            alert(error.message || "Unable to report item. Please try again.");
+
+            if (submitButton) submitButton.disabled = false;
+        }
     });
 }
 
-
-// Display items on home page
+// Fetch items only on the homepage
 if (document.querySelector("#items-container")) {
-    displayItems(items);
+    loadItems();
 }
