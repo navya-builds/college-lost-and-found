@@ -1,11 +1,10 @@
-
 let items = [];
 let selectedStatus = "all";
 
 // Load items from the backend
 async function loadItems() {
     try {
-        const response = await fetch("/api/items");
+        const response = await authFetch("/api/items");
 
         if (!response.ok) {
             throw new Error("Could not load items.");
@@ -51,36 +50,50 @@ function displayItems(itemsToDisplay) {
         return;
     }
 
-    container.innerHTML = itemsToDisplay.map(item => `
-        <div class="item-card">
-            <h3>${escapeHtml(item.name)}</h3>
+    container.innerHTML = itemsToDisplay.map(item => {
+        const contactHtml = item.contactHidden
+            ? `<a class="contact-login-link" href="login.html">Log in to view contact details</a>`
+            : escapeHtml(item.contact);
 
-            <p>
-                <strong>Status:</strong>
-                <span class="item-status">
-                    ${escapeHtml(item.status)}
-                </span>
-            </p>
+        let actionHtml = "";
 
-            <p><strong>Category:</strong> ${escapeHtml(item.category)}</p>
+        if (item.status === "recovered") {
+            actionHtml = "<p><strong>Item recovered successfully.</strong></p>";
+        } else if (item.canManage) {
+            actionHtml = `
+                <button
+                    type="button"
+                    class="recover-button"
+                    data-id="${escapeHtml(item.id)}">
+                    Mark as Recovered
+                </button>`;
+        }
 
-            <p><strong>Description:</strong> ${escapeHtml(item.description || "No description")}</p>
+        return `
+            <article>
+                <h3>${escapeHtml(item.name)}</h3>
 
-            <p><strong>Location:</strong> ${escapeHtml(item.location)}</p>
+                <p>
+                    <strong>Status:</strong>
+                    <span class="status-badge status-${escapeHtml(item.status)}">
+                        ${escapeHtml(item.status)}
+                    </span>
+                </p>
 
-            <p><strong>Date:</strong> ${escapeHtml(item.date)}</p>
+                <p><strong>Category:</strong> ${escapeHtml(item.category)}</p>
 
-            <p><strong>Contact:</strong> ${escapeHtml(item.contact)}</p>
+                <p><strong>Description:</strong> ${escapeHtml(item.description || "No description")}</p>
 
-            ${
-                item.status !== "recovered"
-                    ? `<button class="recover-button" data-id="${escapeHtml(item.id)}">
-                        Mark as Recovered
-                       </button>`
-                    : "<p><strong>Item Recovered</strong></p>"
-            }
-        </div>
-    `).join("");
+                <p><strong>Location:</strong> ${escapeHtml(item.location)}</p>
+
+                <p><strong>Date:</strong> ${escapeHtml(item.date)}</p>
+
+                <p><strong>Contact:</strong> ${contactHtml}</p>
+
+                ${actionHtml}
+            </article>
+        `;
+    }).join("");
 }
 
 // Search and filter items
@@ -140,7 +153,7 @@ setupFilterButton("#lost-button", "lost");
 setupFilterButton("#found-button", "found");
 setupFilterButton("#recovered-button", "recovered");
 
-// Mark an item as recovered using the backend
+// Mark an item as recovered (login zaroori)
 const itemsContainer = document.querySelector("#items-container");
 
 if (itemsContainer) {
@@ -162,7 +175,7 @@ if (itemsContainer) {
         button.disabled = true;
 
         try {
-            const response = await fetch(`/api/items/${itemId}`, {
+            const response = await authFetch(`/api/items/${itemId}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json"
@@ -171,6 +184,13 @@ if (itemsContainer) {
                     status: "recovered"
                 })
             });
+
+            if (response.status === 401) {
+                clearSession();
+                alert("Your session has expired. Please log in again.");
+                window.location.href = "login.html";
+                return;
+            }
 
             const result = await response.json();
 
@@ -190,10 +210,17 @@ if (itemsContainer) {
     });
 }
 
-// Report a new item using the backend
+// Report a new item (login zaroori)
 const reportForm = document.querySelector("#report-form");
 
-if (reportForm) {
+if (reportForm && requireLogin()) {
+    // Contact me logged-in user ki email pehle se bhar do (badal sakte hain)
+    const contactInput = document.querySelector("#contact");
+
+    if (contactInput && !contactInput.value) {
+        contactInput.value = getUser().email;
+    }
+
     reportForm.addEventListener("submit", async event => {
         event.preventDefault();
 
@@ -226,7 +253,7 @@ if (reportForm) {
         if (submitButton) submitButton.disabled = true;
 
         try {
-            const response = await fetch("/api/items", {
+            const response = await authFetch("/api/items", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -241,6 +268,13 @@ if (reportForm) {
                     contact
                 })
             });
+
+            if (response.status === 401) {
+                clearSession();
+                alert("Your session has expired. Please log in again.");
+                window.location.href = "login.html?next=report.html";
+                return;
+            }
 
             const result = await response.json();
 
