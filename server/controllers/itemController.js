@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Item = require("../models/Item");
+const { uploadImageBuffer } = require("../config/cloudinary");
 
 // Item ko frontend ke liye taiyar karo (privacy aur permissions ke saath)
 function formatItem(item, user) {
@@ -13,8 +14,9 @@ function formatItem(item, user) {
 
     const isAdmin = Boolean(user && user.role === "admin");
 
-    // Owner ki id bahar nahi bhejte
+    // Andar ki cheezein bahar nahi bhejte
     delete data.reportedBy;
+    delete data.imagePublicId;
 
     // Logged-out visitors ko contact info nahi dikhegi
     if (!user) {
@@ -38,10 +40,11 @@ async function getItems(req, res) {
     }
 }
 
-// Report a new item (login zaroori)
+// Report a new item (login zaroori, photo optional)
 async function createItem(req, res) {
     try {
-        const { name, status, category, description, location, date, contact } = req.body;
+        const { name, status, category, description, location, date, contact } =
+            req.body || {};
 
         if (!name || !status || !category || !location || !date || !contact) {
             return res.status(400).json({
@@ -55,6 +58,23 @@ async function createItem(req, res) {
             });
         }
 
+        // NAYA: agar photo aayi hai to Cloudinary pe upload karo
+        let imageUrl = "";
+        let imagePublicId = "";
+
+        if (req.file) {
+            try {
+                const result = await uploadImageBuffer(req.file.buffer);
+                imageUrl = result.secure_url;
+                imagePublicId = result.public_id;
+            } catch (uploadError) {
+                console.error("Image upload failed:", uploadError);
+                return res.status(500).json({
+                    message: "Could not upload the image. Please try again."
+                });
+            }
+        }
+
         const item = await Item.create({
             name,
             status,
@@ -63,6 +83,8 @@ async function createItem(req, res) {
             location,
             date,
             contact,
+            imageUrl,
+            imagePublicId,
             reportedBy: req.user._id
         });
 

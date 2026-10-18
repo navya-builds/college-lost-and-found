@@ -13,6 +13,8 @@ const itemSchema = new mongoose.Schema(
         location: { type: String, required: true, trim: true },
         date: { type: String, required: true },
         contact: { type: String, required: true, trim: true },
+                imageUrl: { type: String, default: "" },
+        imagePublicId: { type: String, default: "" },
         reportedBy: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",

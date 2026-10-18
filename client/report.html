@@ -13,18 +13,13 @@
 <body>
 
     <header>
-
         <nav>
-
             <h1>College Lost & Found</h1>
-
             <a href="index.html">Home</a>
             <a href="report.html">Report Item</a>
-
+            <span id="nav-auth" class="nav-auth"></span>
         </nav>
-
     </header>
-
 
     <main>
 
@@ -35,31 +30,16 @@
             <form id="report-form">
 
                 <div>
-
-                    <label for="item-type">
-                        Item Type
-                    </label>
+                    <label for="item-type">Item Type</label>
 
                     <select id="item-type" required>
-
-                        <option value="lost">
-                            Lost
-                        </option>
-
-                        <option value="found">
-                            Found
-                        </option>
-
+                        <option value="lost">Lost</option>
+                        <option value="found">Found</option>
                     </select>
-
                 </div>
 
-
                 <div>
-
-                    <label for="item-name">
-                        Item Name
-                    </label>
+                    <label for="item-name">Item Name</label>
 
                     <input
                         type="text"
@@ -67,56 +47,24 @@
                         placeholder="Enter item name"
                         required
                     >
-
                 </div>
 
-
                 <div>
-
-                    <label for="category">
-                        Category
-                    </label>
+                    <label for="category">Category</label>
 
                     <select id="category" required>
-
-                        <option value="electronics">
-                            Electronics
-                        </option>
-
-                        <option value="bags">
-                            Bags
-                        </option>
-
-                        <option value="documents">
-                            Documents / ID Cards
-                        </option>
-
-                        <option value="stationery">
-                            Stationery
-                        </option>
-
-                        <option value="clothing">
-                            Clothing
-                        </option>
-
-                        <option value="accessories">
-                            Accessories
-                        </option>
-
-                        <option value="other">
-                            Other
-                        </option>
-
+                        <option value="electronics">Electronics</option>
+                        <option value="bags">Bags</option>
+                        <option value="documents">Documents / ID Cards</option>
+                        <option value="stationery">Stationery</option>
+                        <option value="clothing">Clothing</option>
+                        <option value="accessories">Accessories</option>
+                        <option value="other">Other</option>
                     </select>
-
                 </div>
 
-
                 <div>
-
-                    <label for="description">
-                        Description
-                    </label>
+                    <label for="description">Description</label>
 
                     <textarea
                         id="description"
@@ -124,15 +72,28 @@
                         placeholder="Describe the item"
                         required
                     ></textarea>
-
                 </div>
 
+                <div>
+                    <label for="image">Photo (optional)</label>
+
+                    <input
+                        type="file"
+                        id="image"
+                        name="image"
+                        accept="image/png, image/jpeg, image/webp"
+                    >
+
+                    <img
+                        id="image-preview"
+                        class="image-preview"
+                        alt="Selected photo preview"
+                        hidden
+                    >
+                </div>
 
                 <div>
-
-                    <label for="location">
-                        Location
-                    </label>
+                    <label for="location">Location</label>
 
                     <input
                         type="text"
@@ -140,48 +101,32 @@
                         placeholder="Where was it lost/found?"
                         required
                     >
-
                 </div>
 
-
                 <div>
-
-                    <label for="date">
-                        Date
-                    </label>
+                    <label for="date">Date</label>
 
                     <input
                         type="date"
                         id="date"
                         required
                     >
-
                 </div>
-
 
                 <div>
+                    <label for="contact">Contact Email or Phone Number</label>
 
-                    
-
-                    
-<label for="contact">Contact Email or Phone Number</label>
-
-<input
-    type="text"
-    id="contact"
-    name="contact"
-    placeholder="Enter your email or phone number"
-    required
-    minlength="5"
->
-
-
+                    <input
+                        type="text"
+                        id="contact"
+                        name="contact"
+                        placeholder="Enter your email or phone number"
+                        required
+                        minlength="5"
+                    >
                 </div>
 
-
-                <button type="submit">
-                    Submit Report
-                </button>
+                <button type="submit">Submit Report</button>
 
             </form>
 
@@ -189,16 +134,13 @@
 
     </main>
 
-
     <footer>
-
         <p>&copy; 2026 College Lost & Found</p>
-
     </footer>
 
-
-        <script src="auth.js"></script>
+    <script src="auth.js"></script>
     <script src="script.js"></script>
 
 </body>
+
 </html>

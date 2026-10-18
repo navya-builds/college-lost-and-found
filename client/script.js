@@ -55,6 +55,14 @@ function displayItems(itemsToDisplay) {
             ? `<a class="contact-login-link" href="login.html">Log in to view contact details</a>`
             : escapeHtml(item.contact);
 
+        const imageHtml = item.imageUrl
+            ? `<img
+                    class="item-image"
+                    src="${escapeHtml(item.imageUrl)}"
+                    alt="${escapeHtml(item.name)}"
+                    loading="lazy">`
+            : "";
+
         let actionHtml = "";
 
         if (item.status === "recovered") {
@@ -71,6 +79,7 @@ function displayItems(itemsToDisplay) {
 
         return `
             <article>
+                ${imageHtml}
                 <h3>${escapeHtml(item.name)}</h3>
 
                 <p>
@@ -210,6 +219,17 @@ if (itemsContainer) {
     });
 }
 
+// Form ka field dhundo; na mile to saaf error do
+function getField(id) {
+    const element = document.querySelector(`#${id}`);
+
+    if (!element) {
+        throw new Error(`The form field "${id}" is missing from report.html.`);
+    }
+
+    return element;
+}
+
 // Report a new item (login zaroori)
 const reportForm = document.querySelector("#report-form");
 
@@ -221,52 +241,89 @@ if (reportForm && requireLogin()) {
         contactInput.value = getUser().email;
     }
 
+    // Chuni hui photo ka preview dikhao
+    const imageInput = document.querySelector("#image");
+    const imagePreview = document.querySelector("#image-preview");
+
+    if (imageInput && imagePreview) {
+        imageInput.addEventListener("change", () => {
+            const file = imageInput.files[0];
+
+            if (file) {
+                imagePreview.src = URL.createObjectURL(file);
+                imagePreview.hidden = false;
+            } else {
+                imagePreview.removeAttribute("src");
+                imagePreview.hidden = true;
+            }
+        });
+    }
+
     reportForm.addEventListener("submit", async event => {
         event.preventDefault();
-
-        const name = document.querySelector("#item-name").value.trim();
-        const status = document.querySelector("#item-type").value;
-        const category = document.querySelector("#category").value;
-        const description = document.querySelector("#description").value.trim();
-        const location = document.querySelector("#location").value.trim();
-        const date = document.querySelector("#date").value;
-        const contact = document.querySelector("#contact").value.trim();
-
-        if (!name || !status || !category || !location || !date || !contact) {
-            alert("Please fill in all required fields.");
-            return;
-        }
-
-        const validContact =
-            /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact) ||
-            /^\+?[0-9\s()-]{10,15}$/.test(contact);
-
-        if (!validContact) {
-            alert("Please enter a valid email address or phone number.");
-            return;
-        }
 
         const submitButton = reportForm.querySelector(
             'button[type="submit"], input[type="submit"]'
         );
 
-        if (submitButton) submitButton.disabled = true;
-
         try {
+            const name = getField("item-name").value.trim();
+            const status = getField("item-type").value;
+            const category = getField("category").value;
+            const description = getField("description").value.trim();
+            const location = getField("location").value.trim();
+            const date = getField("date").value;
+            const contact = getField("contact").value.trim();
+            const imageInputField = document.querySelector("#image");
+            const imageFile = imageInputField ? imageInputField.files[0] : null;
+
+            if (!name || !status || !category || !location || !date || !contact) {
+                alert("Please fill in all required fields.");
+                return;
+            }
+
+            const validContact =
+                /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact) ||
+                /^\+?[0-9\s()-]{10,15}$/.test(contact);
+
+            if (!validContact) {
+                alert("Please enter a valid email address or phone number.");
+                return;
+            }
+
+            if (imageFile) {
+                const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+
+                if (!allowedTypes.includes(imageFile.type)) {
+                    alert("Please choose a JPG, PNG or WEBP image.");
+                    return;
+                }
+
+                if (imageFile.size > 5 * 1024 * 1024) {
+                    alert("Image must be smaller than 5 MB.");
+                    return;
+                }
+            }
+
+            if (submitButton) submitButton.disabled = true;
+
+            const formData = new FormData();
+            formData.append("name", name);
+            formData.append("status", status);
+            formData.append("category", category);
+            formData.append("description", description);
+            formData.append("location", location);
+            formData.append("date", date);
+            formData.append("contact", contact);
+
+            if (imageFile) {
+                formData.append("image", imageFile);
+            }
+
+            // Content-Type khud mat lagana, browser FormData ke liye khud set karta hai
             const response = await authFetch("/api/items", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    name,
-                    status,
-                    category,
-                    description,
-                    location,
-                    date,
-                    contact
-                })
+                body: formData
             });
 
             if (response.status === 401) {
