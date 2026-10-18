@@ -74,7 +74,7 @@ function displayItems(itemsToDisplay) {
 
             ${
                 item.status !== "recovered"
-                    ? `<button class="recover-button" data-id="${Number(item.id)}">
+                    ? `<button class="recover-button" data-id="${escapeHtml(item.id)}">
                         Mark as Recovered
                        </button>`
                     : "<p><strong>Item Recovered</strong></p>"
