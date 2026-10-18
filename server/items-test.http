@@ -1,0 +1,84 @@
+### SETUP: doosra user banao (ek hi baar chalega, dobara 409 aayega, koi baat nahi)
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Other Student",
+  "email": "other@example.com",
+  "password": "other1234"
+}
+
+### LOGIN as user A (pehle wala test user)
+# @name loginA
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "test1234"
+}
+
+### LOGIN as user B (doosra user)
+# @name loginB
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "other@example.com",
+  "password": "other1234"
+}
+
+### TEST 1: Items dekho BINA login
+GET http://localhost:3000/api/items
+
+### TEST 2: Items dekho LOGIN ke saath (user A)
+GET http://localhost:3000/api/items
+Authorization: Bearer {{loginA.response.body.token}}
+
+### TEST 3: Item report karo BINA login
+POST http://localhost:3000/api/items
+Content-Type: application/json
+
+{
+  "name": "Blue Water Bottle",
+  "status": "lost",
+  "category": "accessories",
+  "description": "Blue steel bottle",
+  "location": "Canteen",
+  "date": "2026-10-18",
+  "contact": "test@example.com"
+}
+
+### TEST 4: Item report karo LOGIN ke saath (user A)
+# @name createItem
+POST http://localhost:3000/api/items
+Authorization: Bearer {{loginA.response.body.token}}
+Content-Type: application/json
+
+{
+  "name": "Blue Water Bottle",
+  "status": "lost",
+  "category": "accessories",
+  "description": "Blue steel bottle",
+  "location": "Canteen",
+  "date": "2026-10-18",
+  "contact": "test@example.com"
+}
+
+### TEST 5: User B us item ko recovered mark kare (rukna chahiye)
+PATCH http://localhost:3000/api/items/{{createItem.response.body.item.id}}
+Authorization: Bearer {{loginB.response.body.token}}
+Content-Type: application/json
+
+{
+  "status": "recovered"
+}
+
+### TEST 6: Owner (user A) recovered mark kare (chalna chahiye)
+PATCH http://localhost:3000/api/items/{{createItem.response.body.item.id}}
+Authorization: Bearer {{loginA.response.body.token}}
+Content-Type: application/json
+
+{
+  "status": "recovered"
+}

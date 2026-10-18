@@ -12,7 +12,12 @@ const itemSchema = new mongoose.Schema(
         description: { type: String, default: "", trim: true },
         location: { type: String, required: true, trim: true },
         date: { type: String, required: true },
-        contact: { type: String, required: true, trim: true }
+        contact: { type: String, required: true, trim: true },
+        reportedBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            default: null
+        }
     },
     { timestamps: true }
 );

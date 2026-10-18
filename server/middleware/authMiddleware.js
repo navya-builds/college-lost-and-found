@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
+// Strict guard: login zaroori hai
 async function protect(req, res, next) {
     try {
         const header = req.headers.authorization || "";
@@ -31,4 +32,25 @@ async function protect(req, res, next) {
     }
 }
 
-module.exports = { protect };
+// Soft guard: login ho to user pehchano, na ho to bhi aage jaane do
+async function optionalAuth(req, res, next) {
+    try {
+        const header = req.headers.authorization || "";
+
+        if (header.startsWith("Bearer ")) {
+            const token = header.split(" ")[1];
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const user = await User.findById(decoded.id);
+
+            if (user) {
+                req.user = user;
+            }
+        }
+    } catch (error) {
+        // Galat ya expire token: user ko logged-out maan lo
+    }
+
+    next();
+}
+
+module.exports = { protect, optionalAuth };
