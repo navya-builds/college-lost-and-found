@@ -5,6 +5,7 @@ const path = require("path");
 const connectDB = require("./config/db");
 const itemRoutes = require("./routes/itemRoutes");
 const authRoutes = require("./routes/authRoutes");
+const claimRoutes = require("./routes/claimRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -22,6 +23,7 @@ app.get("/api", (req, res) => {
 
 app.use("/api/items", itemRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/claims",claimRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);

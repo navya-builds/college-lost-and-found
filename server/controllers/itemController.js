@@ -1,9 +1,22 @@
 const mongoose = require("mongoose");
 const Item = require("../models/Item");
+const Claim = require("../models/Claim");
 const { uploadImageBuffer } = require("../config/cloudinary");
 
+// Un items ki ids jinpe is user ka claim approve ho chuka hai
+async function getApprovedItemIds(user) {
+    if (!user) return new Set();
+
+    const claims = await Claim.find({
+        claimant: user._id,
+        status: "approved"
+    }).select("item");
+
+    return new Set(claims.map(claim => claim.item.toString()));
+}
+
 // Item ko frontend ke liye taiyar karo (privacy aur permissions ke saath)
-function formatItem(item, user) {
+function formatItem(item, user, approvedItemIds = new Set()) {
     const data = item.toJSON();
 
     const isOwner = Boolean(
@@ -18,10 +31,14 @@ function formatItem(item, user) {
     delete data.reportedBy;
     delete data.imagePublicId;
 
-    // Logged-out visitors ko contact info nahi dikhegi
-    if (!user) {
+    // Contact sirf owner, admin ya approved claimant ko
+    const canSeeContact =
+        isOwner || isAdmin || approvedItemIds.has(item._id.toString());
+
+    if (!canSeeContact) {
         delete data.contact;
         data.contactHidden = true;
+        data.contactReason = user ? "claim" : "login";
     }
 
     data.canManage = isOwner || isAdmin;
@@ -33,10 +50,36 @@ function formatItem(item, user) {
 async function getItems(req, res) {
     try {
         const items = await Item.find().sort({ createdAt: -1 });
-        res.json(items.map(item => formatItem(item, req.user)));
+        const approvedIds = await getApprovedItemIds(req.user);
+
+        res.json(items.map(item => formatItem(item, req.user, approvedIds)));
     } catch (error) {
         console.error("Error loading items:", error);
         res.status(500).json({ message: "Could not load items." });
+    }
+}
+
+// Get one item by id
+async function getItemById(req, res) {
+    try {
+        const { id } = req.params;
+
+        if (!mongoose.isValidObjectId(id)) {
+            return res.status(400).json({ message: "Invalid item id." });
+        }
+
+        const item = await Item.findById(id);
+
+        if (!item) {
+            return res.status(404).json({ message: "Item not found." });
+        }
+
+        const approvedIds = await getApprovedItemIds(req.user);
+
+        res.json(formatItem(item, req.user, approvedIds));
+    } catch (error) {
+        console.error("Error loading item:", error);
+        res.status(500).json({ message: "Could not load item." });
     }
 }
 
@@ -58,7 +101,6 @@ async function createItem(req, res) {
             });
         }
 
-        // NAYA: agar photo aayi hai to Cloudinary pe upload karo
         let imageUrl = "";
         let imagePublicId = "";
 
@@ -149,4 +191,4 @@ async function markRecovered(req, res) {
     }
 }
 
-module.exports = { getItems, createItem, markRecovered };
+module.exports = { getItems, getItemById, createItem, markRecovered };

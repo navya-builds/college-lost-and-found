@@ -13,7 +13,7 @@ const itemSchema = new mongoose.Schema(
         location: { type: String, required: true, trim: true },
         date: { type: String, required: true },
         contact: { type: String, required: true, trim: true },
-                imageUrl: { type: String, default: "" },
+        imageUrl: { type: String, default: "" },
         imagePublicId: { type: String, default: "" },
         reportedBy: {
             type: mongoose.Schema.Types.ObjectId,
@@ -24,7 +24,7 @@ const itemSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-// Frontend ko "id" chahiye, MongoDB "_id" deta hai, isliye convert karte hain
+// Frontend needs "id", MongoDB gives "_id"
 itemSchema.set("toJSON", {
     versionKey: false,
     transform: (doc, ret) => {

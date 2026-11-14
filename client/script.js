@@ -51,10 +51,15 @@ function displayItems(itemsToDisplay) {
     }
 
     container.innerHTML = itemsToDisplay.map(item => {
-        const contactHtml = item.contactHidden
-            ? `<a class="contact-login-link" href="login.html">Log in to view contact details</a>`
-            : escapeHtml(item.contact);
+               let contactHtml;
 
+        if (!item.contactHidden) {
+            contactHtml = escapeHtml(item.contact);
+        } else if (item.contactReason === "login") {
+            contactHtml = `<a class="contact-login-link" href="login.html">Log in to view contact details</a>`;
+        } else {
+            contactHtml = "<em>Shared after your claim is approved</em>";
+        }
         const imageHtml = item.imageUrl
             ? `<img
                     class="item-image"
@@ -80,7 +85,7 @@ function displayItems(itemsToDisplay) {
         return `
             <article>
                 ${imageHtml}
-                <h3>${escapeHtml(item.name)}</h3>
+                <h3><a class="title-link" href="item.html?id=${encodeURIComponent(item.id)}">${escapeHtml(item.name)}</a></h3>
 
                 <p>
                     <strong>Status:</strong>
@@ -98,6 +103,9 @@ function displayItems(itemsToDisplay) {
                 <p><strong>Date:</strong> ${escapeHtml(item.date)}</p>
 
                 <p><strong>Contact:</strong> ${contactHtml}</p>
+                                <p>
+                    <a class="details-link" href="item.html?id=${encodeURIComponent(item.id)}">View Details &rarr;</a>
+                </p>
 
                 ${actionHtml}
             </article>
