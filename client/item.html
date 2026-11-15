@@ -1,107 +1,38 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>College Lost & Found</title>
+    <title>Item Details - College Lost & Found</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-    <!-- Navigation -->
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="report.html">Report Item</a>
-        <span id="nav-auth" class="nav-auth"></span>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="container">
-
-        <!-- Hero Section -->
-        <section class="hero">
+    <header>
+        <nav>
             <h1>College Lost & Found</h1>
+            <a href="index.html">Home</a>
+            <a href="report.html">Report Item</a>
+            <span id="nav-auth" class="nav-auth"></span>
+        </nav>
+    </header>
 
-            <p>
-                Lost something on campus or found an item?
-                Help reunite lost belongings with their owners.
-            </p>
+    <main>
+        <a class="back-link" href="index.html">&larr; Back to all items</a>
 
-            <a href="report.html" class="button">
-                Report an Item
-            </a>
+        <section id="item-detail" class="item-detail">
+            <p>Loading item...</p>
         </section>
-
-        <!-- Search Section -->
-        <section class="search-section">
-
-            <h2>Find an Item</h2>
-
-            <form id="search-form">
-
-                <input
-                    type="text"
-                    id="search-input"
-                    placeholder="Search by item name, category or location"
-                >
-
-                <button type="submit" id="search-button">
-                    Search
-                </button>
-
-            </form>
-
-        </section>
-
-        <!-- Filters -->
-        <section class="filter-section">
-
-            <h2>Browse Items</h2>
-
-            <div class="filter-buttons">
-
-                <button type="button" id="all-button">
-                    All Items
-                </button>
-
-                <button type="button" id="lost-button">
-                    Lost Items
-                </button>
-
-                <button type="button" id="found-button">
-                    Found Items
-                </button>
-
-            </div>
-
-        </section>
-
-        <!-- Items List -->
-        <section class="items-section">
-
-            <h2>Recent Items</h2>
-
-            <div id="items-container">
-
-                <p>Loading items...</p>
-
-            </div>
-
-        </section>
-
     </main>
 
-    <!-- Footer -->
     <footer>
-        <p>© 2026 College Lost & Found</p>
+        <p>&copy; 2026 College Lost & Found</p>
     </footer>
 
-    <!-- JavaScript -->
-     <script src="auth.js"></script>
-    <script src="script.js"></script>
+    <script src="auth.js"></script>
+    <script src="item.js"></script>
+
 </body>
 </html>

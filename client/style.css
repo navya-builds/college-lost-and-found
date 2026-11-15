@@ -323,3 +323,70 @@ footer p {
 .image-preview[hidden] {
     display: none;
 }
+/* ---------- Claims ---------- */
+#claim-area h3 {
+    margin: 24px 0 10px;
+}
+
+.claim-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    background-color: #f8fafc;
+}
+
+.claim-card p {
+    margin: 6px 0;
+}
+
+.claim-date {
+    font-size: 13px;
+    color: #64748b;
+}
+
+.claim-pending {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.claim-approved {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.claim-rejected {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+.claim-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.claim-action.approve {
+    background-color: #15803d;
+}
+
+.claim-action.approve:hover {
+    background-color: #166534;
+}
+
+.claim-action.reject {
+    background-color: #b91c1c;
+}
+
+.claim-action.reject:hover {
+    background-color: #991b1b;
+}
+
+.claim-form textarea {
+    margin-bottom: 8px;
+}
+
+.claim-hint {
+    font-size: 14px;
+    color: #64748b;
+}
