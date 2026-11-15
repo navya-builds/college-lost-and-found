@@ -84,7 +84,7 @@ function renderNavbar() {
             window.location.href = "index.html";
         });
 
-        box.append(hello, logout);
+                box.append(makeLink("Dashboard", "dashboard.html"), hello, logout);
     } else {
         box.append(makeLink("Login", "login.html"), makeLink("Sign up", "signup.html"));
     }

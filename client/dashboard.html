@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Dashboard - College Lost & Found</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <nav>
+            <h1>College Lost & Found</h1>
+            <a href="index.html">Home</a>
+            <a href="report.html">Report Item</a>
+            <span id="nav-auth" class="nav-auth"></span>
+        </nav>
+    </header>
+
+    <main id="dashboard">
+
+        <section>
+            <h2>My Dashboard</h2>
+            <p id="dashboard-welcome"></p>
+        </section>
+
+        <div id="dashboard-stats" class="stats-grid"></div>
+
+        <section>
+            <div id="dashboard-tabs" class="tabs">
+                <button type="button" class="tab-button active" data-tab="reports">
+                    My Reports
+                </button>
+
+                <button type="button" class="tab-button" data-tab="claims">
+                    My Claims
+                </button>
+
+                <button type="button" class="tab-button" data-tab="review">
+                    Claims to Review<span id="review-badge" class="count-badge" hidden>0</span>
+                </button>
+            </div>
+
+            <div id="tab-content">
+                <p>Loading your dashboard...</p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 College Lost & Found</p>
+    </footer>
+
+    <script src="auth.js"></script>
+    <script src="dashboard.js"></script>
+
+</body>
+</html>
