@@ -1,0 +1,39 @@
+### Login as A (reports items)
+# @name loginA
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "test1234"
+}
+
+### Login as B (claimant)
+# @name loginB
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "other@example.com",
+  "password": "other1234"
+}
+
+
+### TEST 1: Without login (must be 401)
+GET http://localhost:3000/api/me/items
+
+### TEST 2: A's items
+GET http://localhost:3000/api/me/items
+Authorization: Bearer {{loginA.response.body.token}}
+
+### TEST 3: B's claims
+GET http://localhost:3000/api/me/claims
+Authorization: Bearer {{loginB.response.body.token}}
+
+### TEST 4: Claims received by A
+GET http://localhost:3000/api/me/received-claims
+Authorization: Bearer {{loginA.response.body.token}}
+
+### TEST 5: Claims received by B
+GET http://localhost:3000/api/me/received-claims
+Authorization: Bearer {{loginB.response.body.token}}
